@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MoneyManager
 
-## Getting Started
+Painel pessoal para organizar economias: entradas, custos fixos, gastos variáveis,
+metas de poupança, evolução do patrimônio e limites por categoria — com um espaço
+reservado para dicas diárias geradas por IA (Claude) numa fase seguinte.
 
-First, run the development server:
+## Stack
+
+- **Next.js 16** (App Router) + **TypeScript**
+- **Tailwind CSS v4** (tokens de tema claro/escuro)
+- **Recharts** (gráficos)
+- **Supabase** (Postgres + Auth + RLS) — _a conectar_
+- Deploy alvo: **Vercel**
+
+## Como rodar
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # build de produção
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Arquitetura de dados (importante)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+A camada de dados é **desacoplada** por trás de um adaptador
+(`src/lib/data/storage.ts` → interface `StorageAdapter`).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Hoje:** `localStorageAdapter` — os dados ficam no navegador. Já dá para usar
+  o app de verdade, sem dados falsos.
+- **Depois:** criamos um `supabaseAdapter` implementando a mesma interface. O
+  resto do app (`useData()`, componentes, cálculos) **não muda**.
 
-## Learn More
+Todo o cálculo financeiro vive em `src/lib/finance.ts` (base líquida, disponível,
+gasto por categoria, saúde/dia, evolução de patrimônio).
 
-To learn more about Next.js, take a look at the following resources:
+## Seções do dashboard
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Entradas & Custos Fixos** → base líquida do mês
+2. **Gastos variáveis / disponível** → quanto sobra para gastar
+3. **Gasto real por tipo** → donut por categoria
+4. **Evolução do patrimônio** → potes (Principal, Poupança, Viagem...) no tempo
+5. **Indicadores de saúde** → quanto dá para gastar por dia
+6. **Dica diária (co-piloto)** → placeholder; será gerada pelo Claude às 9h
+7. **Limites por categoria** → orçamento, uso %, status e ação recomendada
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Próximos passos
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Conectar Supabase (rodar `supabase/schema.sql`, preencher `.env.local` a
+   partir de `.env.example`), criar o `supabaseAdapter` e a tela de login.
+2. Ativar as **dicas diárias com IA** (Anthropic API) via cron às 9h.
+3. Deploy na Vercel.
