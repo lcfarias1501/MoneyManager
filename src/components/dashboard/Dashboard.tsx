@@ -35,7 +35,6 @@ import { CategoryBudgetTable } from "./CategoryBudgetTable";
 import { RecentTransactions } from "./RecentTransactions";
 import { AddCategoryButton } from "./AddCategoryButton";
 import { CategoriesManager } from "./CategoriesManager";
-import { TransactionForm } from "@/components/forms/TransactionForm";
 
 export interface AccountInfo {
   email?: string;
@@ -45,7 +44,6 @@ export interface AccountInfo {
 export function Dashboard({ account }: { account?: AccountInfo }) {
   const { data, ready } = useData();
   const [ctx, setCtx] = useState<MonthContext>(() => currentMonth());
-  const [txOpen, setTxOpen] = useState(false);
 
   const now = new Date();
   const isCurrent = ctx.year === now.getFullYear() && ctx.month === now.getMonth();
@@ -91,8 +89,8 @@ export function Dashboard({ account }: { account?: AccountInfo }) {
         onPrev={() => shiftMonth(-1)}
         onNext={() => shiftMonth(1)}
         onToday={() => setCtx(currentMonth())}
+        onPick={(year, month) => setCtx({ year, month })}
         isCurrent={isCurrent}
-        onNew={() => setTxOpen(true)}
         account={account}
       />
 
@@ -255,8 +253,6 @@ export function Dashboard({ account }: { account?: AccountInfo }) {
           Supabase e dicas diárias com IA.
         </p>
       </main>
-
-      <TransactionForm open={txOpen} onClose={() => setTxOpen(false)} />
     </div>
   );
 }
