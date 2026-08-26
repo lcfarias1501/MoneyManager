@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type ComponentProps, useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select } from "@/components/ui/field";
@@ -8,7 +8,12 @@ import { useData } from "@/lib/data/store";
 import type { CategoryKind, FixedItem } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-export function FixedItemForm({
+export function FixedItemForm(props: ComponentProps<typeof FixedItemFormInner>) {
+  if (!props.open) return null;
+  return <FixedItemFormInner {...props} />;
+}
+
+function FixedItemFormInner({
   open,
   onClose,
   editing,

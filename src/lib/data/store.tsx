@@ -75,12 +75,19 @@ export function DataProvider({
   useEffect(() => {
     let alive = true;
     setReady(false);
-    repo.loadAll().then((loaded) => {
-      if (!alive) return;
-      persistedRef.current = loaded;
-      setData(loaded);
-      setReady(true);
-    });
+    repo
+      .loadAll()
+      .then((loaded) => {
+        if (!alive) return;
+        persistedRef.current = loaded;
+        setData(loaded);
+      })
+      .catch((err) => {
+        console.error("Falha ao carregar dados:", err);
+      })
+      .finally(() => {
+        if (alive) setReady(true);
+      });
     return () => {
       alive = false;
     };

@@ -1,13 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { type ComponentProps, useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select } from "@/components/ui/field";
 import { useData } from "@/lib/data/store";
 import { toISODate } from "@/lib/format";
 
-export function SnapshotForm({
+export function SnapshotForm(props: ComponentProps<typeof SnapshotFormInner>) {
+  if (!props.open) return null;
+  return <SnapshotFormInner {...props} />;
+}
+
+function SnapshotFormInner({
   open,
   onClose,
   bucketId,

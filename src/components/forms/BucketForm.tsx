@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type ComponentProps, useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select } from "@/components/ui/field";
@@ -10,7 +10,12 @@ import { CHART_COLORS } from "@/lib/palette";
 import { toISODate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-export function BucketForm({
+export function BucketForm(props: ComponentProps<typeof BucketFormInner>) {
+  if (!props.open) return null;
+  return <BucketFormInner {...props} />;
+}
+
+function BucketFormInner({
   open,
   onClose,
   editing,

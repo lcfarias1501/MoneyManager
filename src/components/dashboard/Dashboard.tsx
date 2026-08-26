@@ -34,6 +34,7 @@ import { BucketsPanel } from "./BucketsPanel";
 import { CategoryBudgetTable } from "./CategoryBudgetTable";
 import { RecentTransactions } from "./RecentTransactions";
 import { AddCategoryButton } from "./AddCategoryButton";
+import { CategoriesManager } from "./CategoriesManager";
 import { TransactionForm } from "@/components/forms/TransactionForm";
 
 export interface AccountInfo {
@@ -179,7 +180,7 @@ export function Dashboard({ account }: { account?: AccountInfo }) {
               title="Gasto real por tipo"
               subtitle="Onde seu dinheiro está indo neste mês"
               icon={<PieIcon className="size-4" />}
-              action={<AddCategoryButton variant="ghost" label="Categoria" />}
+              action={<CategoriesManager currency={data.currency} />}
             />
             <CardContent>
               {spendsWithData ? (

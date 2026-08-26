@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type ComponentProps, useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select } from "@/components/ui/field";
@@ -9,7 +9,12 @@ import type { Category, CategoryGroup, CategoryKind } from "@/lib/types";
 import { CHART_COLORS } from "@/lib/palette";
 import { cn } from "@/lib/utils";
 
-export function CategoryForm({
+export function CategoryForm(props: ComponentProps<typeof CategoryFormInner>) {
+  if (!props.open) return null;
+  return <CategoryFormInner {...props} />;
+}
+
+function CategoryFormInner({
   open,
   onClose,
   editing,

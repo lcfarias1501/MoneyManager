@@ -111,39 +111,66 @@ const transactionRow = (t: Transaction, userId: string) => ({
 });
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** Retries transient auth/clock-skew errors ("JWT issued at future") a few times. */
+async function withRetry<T>(fn: () => Promise<T>, attempts = 4): Promise<T> {
+  let lastErr: unknown;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastErr = err;
+      const msg = err instanceof Error ? err.message : String(err);
+      const transient = /issued at future|clock|exp|jwt/i.test(msg);
+      if (!transient || i === attempts - 1) throw err;
+      await sleep(500 * (i + 1));
+    }
+  }
+  throw lastErr;
+}
+
 export function supabaseRepository(
   supabase: SupabaseClient,
   userId: string,
 ): Repository {
   async function upsert(table: string, rows: unknown[]) {
     if (rows.length === 0) return;
-    const { error } = await supabase.from(table).upsert(rows);
-    if (error) throw new Error(`upsert ${table}: ${error.message}`);
+    await withRetry(async () => {
+      const { error } = await supabase.from(table).upsert(rows);
+      if (error) throw new Error(`upsert ${table}: ${error.message}`);
+    });
   }
   async function remove(table: string, ids: string[]) {
     if (ids.length === 0) return;
-    const { error } = await supabase.from(table).delete().in("id", ids);
-    if (error) throw new Error(`delete ${table}: ${error.message}`);
+    await withRetry(async () => {
+      const { error } = await supabase.from(table).delete().in("id", ids);
+      if (error) throw new Error(`delete ${table}: ${error.message}`);
+    });
   }
 
   return {
     async loadAll() {
-      const [buckets, snapshots, categories, fixedItems, transactions] =
-        await Promise.all([
-          supabase.from("buckets").select("*"),
-          supabase.from("balance_snapshots").select("*"),
-          supabase.from("categories").select("*"),
-          supabase.from("fixed_items").select("*"),
-          supabase.from("transactions").select("*"),
-        ]);
+      const { buckets, snapshots, categories, fixedItems, transactions } =
+        await withRetry(async () => {
+          const [buckets, snapshots, categories, fixedItems, transactions] =
+            await Promise.all([
+              supabase.from("buckets").select("*"),
+              supabase.from("balance_snapshots").select("*"),
+              supabase.from("categories").select("*"),
+              supabase.from("fixed_items").select("*"),
+              supabase.from("transactions").select("*"),
+            ]);
 
-      const firstError =
-        buckets.error ||
-        snapshots.error ||
-        categories.error ||
-        fixedItems.error ||
-        transactions.error;
-      if (firstError) throw new Error(firstError.message);
+          const firstError =
+            buckets.error ||
+            snapshots.error ||
+            categories.error ||
+            fixedItems.error ||
+            transactions.error;
+          if (firstError) throw new Error(firstError.message);
+          return { buckets, snapshots, categories, fixedItems, transactions };
+        });
 
       return {
         ...emptyData(),

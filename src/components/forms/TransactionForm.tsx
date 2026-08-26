@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type ComponentProps, useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select, Textarea } from "@/components/ui/field";
@@ -9,7 +9,13 @@ import type { CategoryKind, Transaction } from "@/lib/types";
 import { toISODate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-export function TransactionForm({
+export function TransactionForm(props: ComponentProps<typeof TransactionFormInner>) {
+  // Mount only while open so state resets on every open.
+  if (!props.open) return null;
+  return <TransactionFormInner {...props} />;
+}
+
+function TransactionFormInner({
   open,
   onClose,
   editing,
