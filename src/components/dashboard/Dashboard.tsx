@@ -36,7 +36,12 @@ import { RecentTransactions } from "./RecentTransactions";
 import { AddCategoryButton } from "./AddCategoryButton";
 import { TransactionForm } from "@/components/forms/TransactionForm";
 
-export function Dashboard() {
+export interface AccountInfo {
+  email?: string;
+  onSignOut: () => void | Promise<void>;
+}
+
+export function Dashboard({ account }: { account?: AccountInfo }) {
   const { data, ready } = useData();
   const [ctx, setCtx] = useState<MonthContext>(() => currentMonth());
   const [txOpen, setTxOpen] = useState(false);
@@ -87,6 +92,7 @@ export function Dashboard() {
         onToday={() => setCtx(currentMonth())}
         isCurrent={isCurrent}
         onNew={() => setTxOpen(true)}
+        account={account}
       />
 
       <main className="mx-auto max-w-6xl space-y-5 px-4 py-6 sm:px-6">

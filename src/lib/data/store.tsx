@@ -18,11 +18,8 @@ import type {
   Transaction,
 } from "../types";
 import { uid } from "../utils";
-import {
-  emptyData,
-  localStorageAdapter,
-  type StorageAdapter,
-} from "./storage";
+import { emptyData } from "./storage";
+import { localStorageRepository, type Repository } from "./repository";
 
 type WithoutMeta<T> = Omit<T, "id" | "createdAt">;
 
@@ -63,39 +60,53 @@ const DataContext = createContext<DataContextValue | null>(null);
 
 export function DataProvider({
   children,
-  adapter = localStorageAdapter,
+  repo = localStorageRepository,
 }: {
   children: React.ReactNode;
-  adapter?: StorageAdapter;
+  repo?: Repository;
 }) {
   const [data, setData] = useState<AppData>(() => emptyData());
   const [ready, setReady] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // last state successfully handed to the repository — the diff baseline
+  const persistedRef = useRef<AppData>(emptyData());
 
   // initial load
   useEffect(() => {
     let alive = true;
-    adapter.load().then((loaded) => {
+    setReady(false);
+    repo.loadAll().then((loaded) => {
       if (!alive) return;
-      if (loaded) setData(loaded);
+      persistedRef.current = loaded;
+      setData(loaded);
       setReady(true);
     });
     return () => {
       alive = false;
     };
-  }, [adapter]);
+  }, [repo]);
 
-  // debounced persistence
+  // debounced persistence (diffs against the last persisted state)
   useEffect(() => {
     if (!ready) return;
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
-      void adapter.save(data);
-    }, 200);
+      const prev = persistedRef.current;
+      if (prev === data) return;
+      const snapshot = data;
+      repo
+        .apply(prev, snapshot)
+        .then(() => {
+          persistedRef.current = snapshot;
+        })
+        .catch((err) => {
+          console.error("Falha ao salvar:", err);
+        });
+    }, 250);
     return () => {
       if (saveTimer.current) clearTimeout(saveTimer.current);
     };
-  }, [data, ready, adapter]);
+  }, [data, ready, repo]);
 
   const mutate = useCallback((fn: (d: AppData) => AppData) => {
     setData((prev) => fn(prev));

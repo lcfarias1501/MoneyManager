@@ -1,10 +1,11 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, PiggyBank, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, LogOut, PiggyBank, Plus } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import type { MonthContext } from "@/lib/finance";
 import { formatMonth } from "@/lib/format";
+import type { AccountInfo } from "./Dashboard";
 
 export function Header({
   ctx,
@@ -13,6 +14,7 @@ export function Header({
   onToday,
   isCurrent,
   onNew,
+  account,
 }: {
   ctx: MonthContext;
   onPrev: () => void;
@@ -20,6 +22,7 @@ export function Header({
   onToday: () => void;
   isCurrent: boolean;
   onNew: () => void;
+  account?: AccountInfo;
 }) {
   const label = formatMonth(new Date(ctx.year, ctx.month, 1));
 
@@ -71,6 +74,27 @@ export function Header({
         <Button size="md" onClick={onNew}>
           <Plus className="size-4" /> Novo lançamento
         </Button>
+
+        {account && (
+          <div className="flex items-center gap-1">
+            {account.email && (
+              <span
+                className="hidden max-w-40 truncate text-xs text-muted sm:inline"
+                title={account.email}
+              >
+                {account.email}
+              </span>
+            )}
+            <button
+              onClick={() => account.onSignOut()}
+              aria-label="Sair"
+              title="Sair"
+              className="flex size-9 items-center justify-center rounded-lg border border-border bg-surface text-muted hover:text-negative"
+            >
+              <LogOut className="size-4" />
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );
