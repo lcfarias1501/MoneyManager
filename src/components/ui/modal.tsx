@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +20,9 @@ export function Modal({
   children: React.ReactNode;
   className?: string;
 }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -32,9 +36,11 @@ export function Modal({
     };
   }, [open, onClose]);
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
-  return (
+  // Portal to <body> so ancestors with backdrop-filter/transform (e.g. the
+  // sticky blurred header) don't become the containing block for our fixed overlay.
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -72,6 +78,7 @@ export function Modal({
         </div>
       </div>
       <style>{`@keyframes modalIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}`}</style>
-    </div>
+    </div>,
+    document.body,
   );
 }
