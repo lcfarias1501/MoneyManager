@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { MailCheck, PiggyBank } from "lucide-react";
+import Image from "next/image";
+import { MailCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { Button } from "@/components/ui/button";
@@ -40,9 +41,16 @@ export default function LoginPage() {
     <main className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="mb-6 flex flex-col items-center text-center">
-          <span className="mb-3 flex size-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
-            <PiggyBank className="size-6" />
-          </span>
+          <div className="relative mb-3 size-12 overflow-hidden rounded-2xl">
+            <Image
+              src="/logo.png"
+              alt="MoneyManager"
+              fill
+              sizes="48px"
+              className="object-cover"
+              priority
+            />
+          </div>
           <h1 className="text-lg font-semibold text-foreground">MoneyManager</h1>
           <p className="text-sm text-muted">Entre para organizar suas economias</p>
         </div>

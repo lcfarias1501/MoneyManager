@@ -1,6 +1,6 @@
 "use client";
 
-import { PiggyBank } from "lucide-react";
+import Image from "next/image";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import type { MonthContext } from "@/lib/finance";
 import { MonthPicker } from "./MonthPicker";
@@ -29,9 +29,16 @@ export function Header({
     <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center gap-2 px-3 py-3 sm:gap-3 sm:px-6">
         <div className="flex items-center gap-2.5">
-          <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-            <PiggyBank className="size-5" />
-          </span>
+          <div className="relative size-9 overflow-hidden rounded-xl">
+            <Image
+              src="/logo.png"
+              alt="MoneyManager"
+              fill
+              sizes="36px"
+              className="object-cover"
+              priority
+            />
+          </div>
           <div className="hidden leading-tight sm:block">
             <p className="text-sm font-semibold text-foreground">MoneyManager</p>
             <p className="text-xs text-muted">Suas economias, organizadas</p>
