@@ -248,10 +248,6 @@ export function Dashboard({ account }: { account?: AccountInfo }) {
           </CardContent>
         </Card>
 
-        <p className="pb-4 text-center text-xs text-muted-2">
-          Dados salvos localmente no seu navegador. Em breve: sincronização com
-          Supabase e dicas diárias com IA.
-        </p>
       </main>
     </div>
   );
