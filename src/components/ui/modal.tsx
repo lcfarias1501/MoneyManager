@@ -51,6 +51,7 @@ export function Modal({
           className,
         )}
       >
+        <div className="mx-auto mt-2.5 h-1 w-10 shrink-0 rounded-full bg-border-strong sm:hidden" />
         <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4">
           <div>
             <h2 className="text-base font-semibold text-foreground">{title}</h2>
@@ -66,7 +67,9 @@ export function Modal({
             <X className="size-4" />
           </button>
         </div>
-        <div className="px-5 py-5">{children}</div>
+        <div className="px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5">
+          {children}
+        </div>
       </div>
       <style>{`@keyframes modalIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}`}</style>
     </div>

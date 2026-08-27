@@ -2,7 +2,7 @@
 
 import { type ComponentProps, useState } from "react";
 import { Modal } from "@/components/ui/modal";
-import { Button } from "@/components/ui/button";
+import { FormActions } from "@/components/ui/form-actions";
 import { Input, Label, Select } from "@/components/ui/field";
 import { useData } from "@/lib/data/store";
 import { toISODate } from "@/lib/format";
@@ -80,12 +80,7 @@ function SnapshotFormInner({
             />
           </div>
         </div>
-        <div className="flex justify-end gap-2 pt-1">
-          <Button type="button" variant="ghost" onClick={onClose}>
-            Cancelar
-          </Button>
-          <Button type="submit">Registrar</Button>
-        </div>
+        <FormActions onCancel={onClose} submitLabel="Registrar" />
       </form>
     </Modal>
   );

@@ -2,7 +2,7 @@
 
 import { type ComponentProps, useState } from "react";
 import { Modal } from "@/components/ui/modal";
-import { Button } from "@/components/ui/button";
+import { FormActions } from "@/components/ui/form-actions";
 import { Input, Label, Select } from "@/components/ui/field";
 import { useData } from "@/lib/data/store";
 import type { Bucket } from "@/lib/types";
@@ -132,12 +132,10 @@ function BucketFormInner({
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-1">
-          <Button type="button" variant="ghost" onClick={onClose}>
-            Cancelar
-          </Button>
-          <Button type="submit">{editing ? "Salvar" : "Criar pote"}</Button>
-        </div>
+        <FormActions
+          onCancel={onClose}
+          submitLabel={editing ? "Salvar" : "Criar pote"}
+        />
       </form>
     </Modal>
   );

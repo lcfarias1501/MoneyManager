@@ -2,7 +2,7 @@
 
 import { type ComponentProps, useState } from "react";
 import { Modal } from "@/components/ui/modal";
-import { Button } from "@/components/ui/button";
+import { FormActions } from "@/components/ui/form-actions";
 import { Input, Label, Select, Textarea } from "@/components/ui/field";
 import { useData } from "@/lib/data/store";
 import type { CategoryKind, Transaction } from "@/lib/types";
@@ -74,7 +74,7 @@ function TransactionFormInner({
                 setCategoryId("");
               }}
               className={cn(
-                "rounded-md py-1.5 text-sm font-medium transition-colors",
+                "rounded-md py-2 text-sm font-medium transition-colors",
                 type === t
                   ? t === "expense"
                     ? "bg-negative-soft text-negative"
@@ -163,12 +163,10 @@ function TransactionFormInner({
           />
         </div>
 
-        <div className="flex justify-end gap-2 pt-1">
-          <Button type="button" variant="ghost" onClick={onClose}>
-            Cancelar
-          </Button>
-          <Button type="submit">{editing ? "Salvar" : "Adicionar"}</Button>
-        </div>
+        <FormActions
+          onCancel={onClose}
+          submitLabel={editing ? "Salvar" : "Adicionar"}
+        />
       </form>
     </Modal>
   );

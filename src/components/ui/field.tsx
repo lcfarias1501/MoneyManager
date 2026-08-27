@@ -15,8 +15,10 @@ export function Label({
   );
 }
 
+// text-base on mobile (16px) prevents iOS Safari from auto-zooming on focus;
+// text-sm keeps it compact from sm upwards.
 const fieldBase =
-  "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-primary transition-colors";
+  "w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-base text-foreground placeholder:text-muted-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-primary transition-colors sm:py-2 sm:text-sm";
 
 export function Input({
   className,

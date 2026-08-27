@@ -2,7 +2,7 @@
 
 import { type ComponentProps, useState } from "react";
 import { Modal } from "@/components/ui/modal";
-import { Button } from "@/components/ui/button";
+import { FormActions } from "@/components/ui/form-actions";
 import { Input, Label, Select } from "@/components/ui/field";
 import { useData } from "@/lib/data/store";
 import type { Category, CategoryGroup, CategoryKind } from "@/lib/types";
@@ -132,12 +132,10 @@ function CategoryFormInner({
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-1">
-          <Button type="button" variant="ghost" onClick={onClose}>
-            Cancelar
-          </Button>
-          <Button type="submit">{editing ? "Salvar" : "Adicionar"}</Button>
-        </div>
+        <FormActions
+          onCancel={onClose}
+          submitLabel={editing ? "Salvar" : "Adicionar"}
+        />
       </form>
     </Modal>
   );
