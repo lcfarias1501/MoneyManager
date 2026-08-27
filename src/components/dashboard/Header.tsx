@@ -27,20 +27,18 @@ export function Header({
 }) {
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 sm:px-6">
+      <div className="mx-auto flex max-w-6xl items-center gap-2 px-3 py-3 sm:gap-3 sm:px-6">
         <div className="flex items-center gap-2.5">
           <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
             <PiggyBank className="size-5" />
           </span>
-          <div className="leading-tight">
+          <div className="hidden leading-tight sm:block">
             <p className="text-sm font-semibold text-foreground">MoneyManager</p>
-            <p className="hidden text-xs text-muted sm:block">
-              Suas economias, organizadas
-            </p>
+            <p className="text-xs text-muted">Suas economias, organizadas</p>
           </div>
         </div>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
           <MonthPicker
             ctx={ctx}
             onPrev={onPrev}

@@ -36,12 +36,13 @@ export function MonthPicker({
   isCurrent: boolean;
 }) {
   const label = `${MONTHS_FULL[ctx.month]} de ${ctx.year}`;
+  const shortLabel = `${MONTHS[ctx.month]} ${String(ctx.year).slice(2)}`;
 
   return (
     <div className="flex items-center gap-0.5 rounded-lg border border-border bg-surface p-0.5">
       <button
         onClick={onPrev}
-        className="rounded-md p-1.5 text-muted hover:bg-surface-2 hover:text-foreground"
+        className="rounded-md p-1 text-muted hover:bg-surface-2 hover:text-foreground sm:p-1.5"
         aria-label="Mês anterior"
       >
         <ChevronLeft className="size-4" />
@@ -52,14 +53,15 @@ export function MonthPicker({
         triggerAriaLabel="Escolher mês"
         triggerContent={
           <>
-            <CalendarDays className="size-4 text-muted" />
-            <span className="min-w-28 text-center capitalize sm:min-w-36">
+            <CalendarDays className="hidden size-4 text-muted sm:block" />
+            <span className="text-center capitalize sm:hidden">{shortLabel}</span>
+            <span className="hidden min-w-36 text-center capitalize sm:inline">
               {label}
             </span>
             <ChevronDown className="size-3.5 text-muted-2" />
           </>
         }
-        triggerClassName="inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-sm font-medium text-foreground hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        triggerClassName="inline-flex h-7 items-center gap-1 rounded-md px-1.5 text-sm font-medium text-foreground hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:gap-1.5 sm:px-2"
         panelClassName="w-64 p-3"
       >
         <MonthGrid ctx={ctx} onPick={onPick} onToday={onToday} isCurrent={isCurrent} />
@@ -67,7 +69,7 @@ export function MonthPicker({
 
       <button
         onClick={onNext}
-        className="rounded-md p-1.5 text-muted hover:bg-surface-2 hover:text-foreground"
+        className="rounded-md p-1 text-muted hover:bg-surface-2 hover:text-foreground sm:p-1.5"
         aria-label="Próximo mês"
       >
         <ChevronRight className="size-4" />
