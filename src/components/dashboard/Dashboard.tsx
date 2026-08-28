@@ -22,6 +22,7 @@ import {
   type MonthContext,
 } from "@/lib/finance";
 import { formatCurrency } from "@/lib/format";
+import { buildTipSummary } from "@/lib/ai/tip-summary";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Header } from "./Header";
@@ -96,7 +97,17 @@ export function Dashboard({ account }: { account?: AccountInfo }) {
 
       <main className="mx-auto max-w-6xl space-y-5 px-4 py-6 sm:px-6">
         {/* Co-piloto */}
-        <DailyTipCard health={health} hasData={hasAnyData} currency={data.currency} />
+        <DailyTipCard
+          summary={buildTipSummary(
+            base,
+            variable,
+            spends,
+            health,
+            data.currency,
+            hasAnyData,
+          )}
+          enabled={!!account}
+        />
 
         {/* KPIs */}
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">

@@ -58,8 +58,19 @@ create table if not exists transactions (
   created_at timestamptz not null default now()
 );
 
+-- Dica diária gerada por IA (uma por usuário por dia)
+create table if not exists daily_tips (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  date date not null,
+  message text not null,
+  created_at timestamptz not null default now(),
+  unique (user_id, date)
+);
+
 -- ---------- Índices ----------
 create index if not exists idx_tx_user_date on transactions (user_id, date);
+create index if not exists idx_tips_user_date on daily_tips (user_id, date);
 create index if not exists idx_snap_user_bucket on balance_snapshots (user_id, bucket_id, date);
 create index if not exists idx_cat_user on categories (user_id);
 create index if not exists idx_fixed_user on fixed_items (user_id);
@@ -70,12 +81,13 @@ alter table balance_snapshots enable row level security;
 alter table categories enable row level security;
 alter table fixed_items enable row level security;
 alter table transactions enable row level security;
+alter table daily_tips enable row level security;
 
 -- Política padrão: dono é quem tem auth.uid() = user_id
 do $$
 declare t text;
 begin
-  foreach t in array array['buckets','balance_snapshots','categories','fixed_items','transactions']
+  foreach t in array array['buckets','balance_snapshots','categories','fixed_items','transactions','daily_tips']
   loop
     execute format('drop policy if exists "own_rows" on %I;', t);
     execute format(
