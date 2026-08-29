@@ -110,7 +110,7 @@ export function Dashboard({ account }: { account?: AccountInfo }) {
         />
 
         {/* KPIs */}
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 [&>*]:min-w-0">
           <StatTile
             label="Base líquida do mês"
             value={formatCurrency(base.netBase, data.currency)}
@@ -139,7 +139,7 @@ export function Dashboard({ account }: { account?: AccountInfo }) {
           />
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="grid gap-5 lg:grid-cols-2 [&>*]:min-w-0">
           {/* Entradas & Custos Fixos */}
           <Card>
             <CardHeader
@@ -182,7 +182,7 @@ export function Dashboard({ account }: { account?: AccountInfo }) {
           </Card>
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="grid gap-5 lg:grid-cols-2 [&>*]:min-w-0">
           {/* Gasto por tipo */}
           <Card>
             <CardHeader
